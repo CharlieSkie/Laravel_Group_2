@@ -1,33 +1,169 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Paradise Restaurant</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100%;
+            font-family: "Poppins", sans-serif;
+            background: url('{{ asset('images/restaurant-bg.jpg') }}') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-        <title>{{ config('app.name', 'DashBoard') }}</title>
+        /* 🔶 Optional soft overlay for contrast */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            z-index: 1;
+        }
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        /* 🍽️ Transparent Glass Login Box */
+        .login-container {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px 60px;
+            text-align: center;
+            color: #fff;
+            width: 400px;
+            box-shadow: 0 0 40px rgba(255,165,0,0.25);
+            animation: fadeIn 1.2s ease-in-out;
+        }
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                   <img src="{{ asset('images/logo1.jpg') }}" 
-                 alt="Logo" 
-                 class="w-14 h-14 mx-auto rounded-full shadow-xl ring-4 ring-white/40 mb-4">
+        .login-container h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffb347, #ff8c00, #ff6600);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
 
-                </a>
+        .login-container p {
+            color: #ffe8c2;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            color: #fff3e0;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(255,165,0,0.6);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #ffb347, #ff8c00);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #ffd480, #ff9c33);
+            box-shadow: 0 0 30px rgba(255,165,0,0.5);
+            transform: translateY(-2px);
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 0.95rem;
+            color: #fff3e0;
+        }
+
+        .footer-text a {
+            color: #ffd480;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                width: 90%;
+                padding: 40px 30px;
+            }
+            .login-container h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+
+    <!-- 🍴 Login Form -->
+    <div class="login-container">
+        <h1>Welcome Back 🍴</h1>
+        <p>Log in to manage your reservations and dining experience.</p>
+
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input id="email" type="email" name="email" required autofocus placeholder="Enter your email">
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" required placeholder="Enter your password">
             </div>
+
+            <button type="submit" class="btn">Login</button>
+        </form>
+
+        <div class="footer-text">
+            <p>Don’t have an account? <a href="{{ route('register') }}">Sign up</a></p>
         </div>
-    </body>
+    </div>
+</body>
 </html>
