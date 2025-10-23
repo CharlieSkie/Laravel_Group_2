@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FoodController;
+use App\Http\Controllers\ReservationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,12 +26,17 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/foods', [FoodController::class, 'index'])->name('foods.index');
     Route::get('/foods/{id}', [FoodController::class, 'show'])->name('foods.show');
-    Route::get('/reserve/{id}', function ($id) {
-        return view('reserve', ['food_id' => $id]);
-    })->name('reserve.table');
 
-    // 👇 Added this line (so your floating button link "menu" will work)
-    Route::get('/menu', [FoodController::class, 'index'])->name('menu');
+    // ✅ Reserve a specific food item
+    Route::get('/reserve/{id}', [ReservationController::class, 'create'])->name('reserve.table');
+
+    // ✅ Menu List Dashboard (separate from normal dashboard)
+    Route::get('/menu', [FoodController::class, 'menu'])->name('menu'); // 👈 Use FoodController@menu instead of @index
 });
 
-require __DIR__.'/auth.php';
+// ✅ Reservation Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+});
+
+require __DIR__ . '/auth.php';
